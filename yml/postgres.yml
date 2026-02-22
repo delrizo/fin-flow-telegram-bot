@@ -1,0 +1,24 @@
+volumes:
+    postgres-data:
+
+services:
+    postgres:
+        image: postgres:latest
+        container_name: postgres
+        restart: unless-stopped
+        security_opt:
+            - no-new-privileges:true
+        healthcheck:
+            test: ['CMD', 'pg_isready', '-q', '-d', 'fin-flow-core', '-U', 'fin-flow-admin']
+            timeout: 45s
+            interval: 10s
+            retries: 10
+        ports:
+            - '8000:5432'
+        volumes:
+            - ./postgres-data:/var/lib/postgresql
+        environment:
+            - TZ=Europe/Minsk
+            - POSTGRES_DB=fin-flow-core
+            - POSTGRES_USER=fin-flow-admin
+            - POSTGRES_PASSWORD=fin-flow-admin
